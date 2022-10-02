@@ -1,13 +1,12 @@
 import * as contentful from "contentful";
+import { DefaultLayout } from "../layouts/DefaultLayout";
 
 export default function Page(props) {
   return (
-    <div>
-      <main>
-        <h1>{props.title}</h1>
-        <div>{props.description}</div>
-      </main>
-    </div>
+    <DefaultLayout>
+      <h1>{props.title}</h1>
+      <div>{props.description}</div>
+    </DefaultLayout>
   );
 }
 
