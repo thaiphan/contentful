@@ -1,14 +1,42 @@
 import * as contentful from "contentful";
 import { DefaultLayout } from "../layouts/DefaultLayout";
+import styled from "styled-components";
+import Head from "next/head";
 
 export default function Page(props) {
   return (
     <DefaultLayout>
-      <h1>{props.title}</h1>
-      <div>{props.description}</div>
+      <Head>
+        <title>{props.title}</title>
+      </Head>
+      {props.sections?.map((section) => {
+        switch (section.fields.type) {
+          case "FiftyFifty":
+            return (
+              <section key={section.sys.id}>
+                <h1>{section.fields.title}</h1>
+              </section>
+            );
+          case "Hero":
+            return (
+              <Hero key={section.sys.id}>
+                <h1>{section.fields.title}</h1>
+              </Hero>
+            );
+          default:
+            return null;
+        }
+      })}
     </DefaultLayout>
   );
 }
+
+const Hero = styled.section`
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  height: 30vh;
+`;
 
 const client = contentful.createClient({
   space: "aijk8pnq8fax",
@@ -46,6 +74,7 @@ export const getStaticProps = async (props) => {
   const response = await client.getEntries({
     content_type: "page",
     "fields.slug": slug,
+    limit: 1,
     locale: props.locale,
   });
 
