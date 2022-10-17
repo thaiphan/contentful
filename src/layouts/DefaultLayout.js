@@ -6,7 +6,7 @@ export const DefaultLayout = (props) => {
   const router = useRouter();
   const { asPath, locale } = router;
 
-  const newLocale = locale === "en-CA" ? "fr-CA" : "en-CA";
+  const newLocale = locale === "en" ? "fr" : "en";
 
   return (
     <>
