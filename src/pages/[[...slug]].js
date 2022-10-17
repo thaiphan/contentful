@@ -2,6 +2,8 @@ import * as contentful from "contentful";
 import { DefaultLayout } from "../layouts/DefaultLayout";
 import styled from "styled-components";
 import Head from "next/head";
+import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import Image from "next/image";
 
 export default function Page(props) {
   return (
@@ -12,9 +14,29 @@ export default function Page(props) {
       {props.sections?.map((section) => {
         switch (section.fields.type) {
           case "FiftyFifty":
+            console.log(section.fields.image.fields.file.details.image);
             return (
-              <section key={section.sys.id}>
-                <h1>{section.fields.title}</h1>
+              <section>
+                <FiftyFifty key={section.sys.id}>
+                  <ImageContainer>
+                    <Image
+                      src={`https:${section.fields.image.fields.file.url}`}
+                      layout="responsive"
+                      height={
+                        section.fields.image.fields.file.details.image.height
+                      }
+                      width={
+                        section.fields.image.fields.file.details.image.width
+                      }
+                    />
+                  </ImageContainer>
+                  <FiftyFiftyContent>
+                    <div>
+                      <h1>{section.fields.title}</h1>
+                      {documentToReactComponents(section.fields.description)}
+                    </div>
+                  </FiftyFiftyContent>
+                </FiftyFifty>
               </section>
             );
           case "Hero":
@@ -30,6 +52,30 @@ export default function Page(props) {
     </DefaultLayout>
   );
 }
+
+const ImageContainer = styled.div`
+  position: relative;
+`;
+
+const FiftyFiftyContent = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const FiftyFifty = styled.section`
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  margin: 0 auto;
+  max-width: 1280px;
+
+  ${ImageContainer} {
+    grid-column: 1 / span 6;
+  }
+
+  ${FiftyFiftyContent} {
+    grid-column: 8 / -1;
+  }
+`;
 
 const Hero = styled.section`
   align-items: center;
