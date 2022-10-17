@@ -81,6 +81,7 @@ export const getStaticProps = async (props) => {
   if (response.items.length > 0) {
     return {
       props: response.items[0].fields,
+      revalidate: 10,
     };
   } else {
     return {
